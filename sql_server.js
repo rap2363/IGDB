@@ -53,7 +53,7 @@ function filterInt(value) {
   return NaN;
 }
 function queryDatabase(query) {
-    var db = new sqlite3.Database('Glazing_test.sqlite');
+    var db = new sqlite3.Database('GlazingDB.sqlite');
     return when.promise(function (resolve, reject) {
         db.serialize(function() {
             var allRows = [];
