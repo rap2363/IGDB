@@ -9,8 +9,8 @@ var done = false;
 var PORT_NAME = process.env.PORT || 8000;
 
 server.use(bodyParser.json({ type: "application/json" }));
-server.get('', function() {
-    res.end('Welcome to the International Glazing Database!');
+server.get('/', function(request, response) {
+    response.end('Welcome to the International Glazing Database!');
 });
 server.post('/data', function (request, response) {
     var data = request.body;
