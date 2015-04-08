@@ -1,0 +1,2 @@
+# Don't commit any actual databases
+*.sqlite
