@@ -1,2 +1,5 @@
 # Don't commit any actual databases
 *.sqlite
+
+# Ignore the node_modules
+node_modules/*

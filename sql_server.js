@@ -17,7 +17,7 @@ server.post('/data', function (request, response) {
     response.set('Content-Type', 'application/json');
     if (data.queryType) {
         if (data.queryType === 'spectralProperties' && data.hasOwnProperty('query') && !isNaN(filterInt(data.query))) {
-            when(queryDatabase(filterInt(data.query))).then(function (rows) {
+            when(querySpectralProperties(filterInt(data.query))).then(function (rows) {
                 var responseData = {
                     GlazingID: data.query,
                     Wavelengths: _.pluck(rows, 'Wavelength'),
@@ -28,14 +28,15 @@ server.post('/data', function (request, response) {
                 response.end(JSON.stringify(responseData));
             });
         }
+        else if (data.queryType === 'generalQuery' && data.hasOwnProperty('query')) {
+            when(queryDatabase(data.query)).then(function (rows) {
+                response.end(JSON.stringify(rows));
+            }, function() {
+                response.end(JSON.stringify({}));
+            });
+        }
         else {
-            response.end(JSON.stringify({
-                GlazingID: data.query,
-                Wavelengths: [],
-                T: [],
-                Rf: [],
-                Rb: []
-            }));
+            response.end(JSON.stringify({}));
         }
     }
     else {
@@ -52,11 +53,23 @@ function filterInt(value) {
     return parseInt(value);
   return NaN;
 }
+
 function queryDatabase(query) {
     var db = new sqlite3.Database('GlazingDB.sqlite');
     return when.promise(function (resolve, reject) {
         db.serialize(function() {
-            var allRows = [];
+            db.all("SELECT "+query[0]+" FROM "+query[1]+" WHERE "+query[2], function(err, rows) {
+                if (err) {reject(err);}
+                resolve(rows);
+            });
+        });
+    });
+}
+
+function querySpectralProperties(query) {
+    var db = new sqlite3.Database('GlazingDB.sqlite');
+    return when.promise(function (resolve, reject) {
+        db.serialize(function() {
             db.all("SELECT * FROM SpectralData WHERE GlazingID="+query, function(err, rows) {
                 if (err) {reject(err);}
                 resolve(rows);
