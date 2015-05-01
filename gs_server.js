@@ -6,7 +6,7 @@ var express             = require('express'),
 
 var server = express();
 var done = false;
-var PORT_NAME = process.env.PORT || 8000;
+var PORT_NAME = process.env.PORT || 8080;
 
 var NUMBER_OF_TOP_SYSTEMS = 10;
 
