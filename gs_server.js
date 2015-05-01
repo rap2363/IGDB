@@ -20,7 +20,7 @@ server.post('/data', function (request, response) {
     if (data.queryType && data.queryType === 'optimization' && data.hasOwnProperty('query')) {
         when(searchTable(data.query)).then(function (rows) {
             response.end(JSON.stringify(_.map(rows, function(row) {
-                return _.pick(row, _.keys(data.query).concat('score').concat('ID'));
+                return row;
             })));
         });
     }
